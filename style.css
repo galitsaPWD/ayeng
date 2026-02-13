@@ -1,0 +1,402 @@
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap");
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: "Montserrat", sans-serif;
+}
+
+#ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through to canvas if needed, but buttons need pointer-events: auto */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#question {
+  font-family: "Great Vibes", cursive;
+  font-size: 5rem;
+  color: #ff4d6d;
+  text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+  animation-delay: 1s; /* Wait for flower to start growing */
+}
+
+.buttons {
+  display: flex;
+  gap: 2rem;
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+  animation-delay: 2s;
+  pointer-events: auto; /* Re-enable clicks for buttons */
+  position: relative;
+  z-index: 100; /* Ensure it's above everything */
+}
+
+button {
+  padding: 1rem 3rem;
+  font-size: 1.5rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+}
+
+#yes-btn {
+  background-color: #ff4d6d;
+  color: white;
+  box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+}
+
+#yes-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255, 77, 109, 0.6);
+}
+
+#no-btn {
+  background-color: #fff;
+  color: #ff4d6d;
+  border: 2px solid #ff4d6d;
+  z-index: 1000; /* Always on top */
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Transition Helper */
+.fade-out {
+    opacity: 0 !important;
+    transition: opacity 2s ease-out;
+    pointer-events: none;
+}
+
+.hidden {
+    display: none;
+    opacity: 0;
+}
+
+/* Envelope Styling */
+/* Envelope Styling */
+#envelope {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 200px;
+    background-color: #ffccd5;
+    transform: translate(-50%, -50%) scale(0.8);
+    transition: opacity 1s ease, transform 0.5s ease;
+    z-index: 2000;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    opacity: 0; /* Hidden by default until .show */
+    pointer-events: none; /* No clicks until shown */
+}
+
+#envelope.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    pointer-events: auto; /* Enable clicks */
+}
+
+#envelope:active {
+    transform: translate(-50%, -50%) scale(0.95); 
+}
+
+/* Flap (Top triangle) */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0; 
+    height: 0; 
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 120px solid #ffb3c1; /* Standard overlap */
+    transform-origin: top;
+    transition: transform 0.6s ease-in-out, z-index 0.2s; 
+    z-index: 5;
+}
+
+/* Pocket (Bottom triangle) */
+.pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; 
+    height: 0; 
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 130px solid #ffccd5; /* Standard overlap */
+    z-index: 4;
+}
+
+/* Side Flaps */
+.flap-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+    border-left: 150px solid #ffccd5;
+    z-index: 3;
+}
+
+.flap-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+    border-right: 150px solid #ffccd5;
+    z-index: 3;
+}
+
+/* Letter inside */
+.letter {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    width: 270px;
+    height: 160px;
+    background-color: #fff0f3;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    
+    /* Animation Properties */
+    transform: translateY(0);
+    opacity: 0; /* Hidden initially */
+    z-index: 2;
+    pointer-events: none;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid #ffccd5;
+    
+    /* Smooth Transition */
+    transition: 
+        transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s, /* Slide up after flap starts */
+        opacity 0.2s ease 0.4s, /* Fade in relative to slide */
+        z-index 0s linear 0.4s;
+}
+
+.letter-content {
+    opacity: 0; 
+    transition: opacity 0.5s ease 0.8s; /* Fade text in last */
+}
+
+/* Open State */
+#envelope.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1; /* Move behind */
+}
+
+#envelope.open .letter {
+    transform: translateY(-120px);
+    opacity: 1;
+    z-index: 10;
+    pointer-events: auto;
+    height: 300px; /* Expand height */
+    transition: 
+        transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s,
+        opacity 0.2s ease 0.4s,
+        height 0.6s ease 0.4s,
+        z-index 0s linear 0.4s;
+}
+
+#envelope.open .letter-content {
+    opacity: 1; 
+}
+
+#envelope.open {
+    cursor: default; 
+}
+
+/* Typography */
+.letter h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 2.5rem;
+    color: #e71d36;
+    margin: 0;
+}
+
+.letter p {
+    font-size: 1rem;
+    color: #590d22;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+}
+
+.small-text {
+    font-size: 0.8rem;
+    color: #800f2f;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+#envelope.show {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Flap (Top triangle) */
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0; 
+    height: 0; 
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-top: 130px solid #ffb3c1; /* Increased Overlap */
+    transform-origin: top;
+    transition: transform 0.6s ease-in-out, z-index 0.2s; 
+    z-index: 4; /* Cover letter (2) */
+}
+
+#envelope:active {
+    transform: translate(-50%, -50%) scale(0.95); 
+}
+
+/* Pocket (Bottom triangle) */
+.pocket {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; 
+    height: 0; 
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 140px solid #ffccd5; /* Increased Overlap */
+    z-index: 3; /* Cover letter (2) */
+}
+
+/* Side Flaps */
+.flap-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+    border-left: 180px solid #ffccd5; /* Wider side flap */
+    z-index: 3; 
+}
+
+.flap-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 100px solid transparent;
+    border-bottom: 100px solid transparent;
+    border-right: 180px solid #ffccd5; /* Wider side flap */
+    z-index: 3;
+}
+
+/* Letter inside */
+.letter {
+    position: absolute;
+    /* Center it initially */
+    top: 40px; /* Lower starting position */
+    left: 40px; /* Centered with smaller width */
+    width: 220px; /* Smaller width */
+    height: 120px; /* Smaller height */
+    background-color: #fff0f3;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    /* Transition transform instead of top */
+    transition: transform 0.8s ease-in-out, z-index 0.1s, height 0.8s ease;
+    z-index: 2; /* Inside envelope */
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid #ffccd5;
+    /* Ensure no transform offset initially */
+    transform: translateY(0) scale(1);
+    pointer-events: none; /* Prevent clicks on letter while inside */
+    /* Animate transform smoothly */
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.6s ease, z-index 0s linear 0.6s;
+}
+
+.letter-content {
+    opacity: 0; 
+    transition: opacity 0.5s ease 0.6s; /* Wait for slide out */
+}
+
+/* Open State */
+#envelope.open .flap {
+    transform: rotateX(180deg);
+    z-index: 1; /* Move behind everything */
+    transition-delay: 0s;
+}
+
+#envelope.open .letter {
+    /* Slide out UP and Scale */
+    transform: translateY(-120px) scale(1.1); 
+    z-index: 10; /* Pop to front AFTER slide (delayed) */
+    height: 300px; 
+    overflow: visible;
+    pointer-events: auto;
+}
+
+#envelope.open .letter-content {
+    opacity: 1; 
+}
+
+#envelope.open {
+    cursor: default; 
+}
+
+/* Font Styles for Letter Content */
+.letter h2 {
+    font-family: "Great Vibes", cursive;
+    font-size: 2.5rem;
+    color: #e71d36;
+    margin: 0;
+}
+
+.letter p {
+    font-size: 1rem;
+    color: #590d22;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+}
+
+.small-text {
+    font-size: 0.8rem;
+    color: #800f2f;
+    font-style: italic;
+    margin-top: 10px;
+}

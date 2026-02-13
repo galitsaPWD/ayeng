@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; transition: background-color 2s ease; }
+        canvas { display: block; position: absolute; top: 0; left: 0; z-index: 1; }
+    </style>
+</head>
+<body>
+    <div id="ui-layer">
+        <h1 id="question">Will you be my Valentine?</h1>
+        <div class="buttons">
+            <button id="yes-btn">Yes</button>
+            <button id="no-btn">No</button>
+        </div>
+        
+        <!-- Envelope & Letter -->
+        <div id="envelope" class="hidden">
+            <div class="letter">
+                <div class="letter-content">
+                    <h2>Yay! I knew it!</h2>
+                    <p>Miles apart, but you totally made my day! (⁠•⁠ө⁠•⁠)⁠♡</p>
+                    <p class="small-text">See you soon! ✈️✨</p>
+                </div>
+            </div>
+            <div class="flap-left"></div>
+            <div class="flap-right"></div>
+            <div class="flap"></div>
+            <div class="pocket"></div>
+        </div>
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script src="main.js"></script>
+</body>
+</html>
