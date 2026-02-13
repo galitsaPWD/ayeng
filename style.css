@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap");
 
+/* Preload hint - helps browser prioritize font loading */
+/* Add this link tag to HTML head for even better performance:
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+*/
+
 body {
   margin: 0;
   overflow: hidden;
@@ -399,4 +405,122 @@ button {
     color: #800f2f;
     font-style: italic;
     margin-top: 10px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    #question {
+        font-size: 3rem;
+        margin-bottom: 1.5rem;
+    }
+
+    button {
+        padding: 0.8rem 2rem;
+        font-size: 1.2rem;
+    }
+
+    .buttons {
+        gap: 1.5rem;
+    }
+
+    /* Envelope Responsive - Use scale instead of recalculating borders */
+    #envelope {
+        transform: translate(-50%, -50%) scale(0.7);
+    }
+
+    #envelope.show {
+        transform: translate(-50%, -50%) scale(0.85);
+    }
+
+    #envelope:active {
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+
+    .letter {
+        padding: 15px;
+    }
+
+    .letter h2 {
+        font-size: 2rem;
+    }
+
+    .letter p {
+        font-size: 0.9rem;
+    }
+
+    .small-text {
+        font-size: 0.75rem;
+    }
+
+    #envelope.open .letter {
+        height: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    #question {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-align: center;
+        padding: 0 1rem;
+    }
+
+    button {
+        padding: 0.7rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .buttons {
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* Smaller envelope for very small screens */
+    #envelope {
+        transform: translate(-50%, -50%) scale(0.6);
+    }
+
+    #envelope.show {
+        transform: translate(-50%, -50%) scale(0.75);
+    }
+
+    #envelope:active {
+        transform: translate(-50%, -50%) scale(0.7);
+    }
+
+    .letter h2 {
+        font-size: 1.8rem;
+    }
+
+    .letter p {
+        font-size: 0.85rem;
+    }
+
+    #envelope.open .letter {
+        height: 260px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    #question {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .buttons {
+        gap: 1rem;
+    }
+
+    #envelope {
+        transform: translate(-50%, -50%) scale(0.65);
+    }
+
+    #envelope.show {
+        transform: translate(-50%, -50%) scale(0.75);
+    }
+
+    #envelope.open .letter {
+        height: 240px;
+    }
 }

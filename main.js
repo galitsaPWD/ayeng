@@ -352,23 +352,34 @@ function handleNoClick() {
     const vW = window.innerWidth;
     const vH = window.innerHeight;
     
-    // Safe zone: Keep button between 10% and 80% of screen to avoid edges
-    const safeW = vW * 0.7; // Available width 70%
-    const safeH = vH * 0.7; // Available height 70%
-    const offsetX = vW * 0.15; // Start at 15%
-    const offsetY = vH * 0.15; // Start at 15%
+    // Get button dimensions
+    const btnRect = noBtn.getBoundingClientRect();
+    const btnWidth = btnRect.width;
+    const btnHeight = btnRect.height;
     
-    const newLeft = offsetX + Math.random() * safeW;
-    const newTop = offsetY + Math.random() * safeH;
+    // Adjust safe zones based on screen size
+    const isMobile = vW <= 768;
+    const safeMargin = isMobile ? 0.1 : 0.15; // 10% margin on mobile, 15% on desktop
+    
+    // Calculate safe zone
+    const marginX = vW * safeMargin;
+    const marginY = vH * safeMargin;
+    const safeW = vW - (2 * marginX) - btnWidth;
+    const safeH = vH - (2 * marginY) - btnHeight;
+    
+    // Random position within safe zone
+    const newLeft = marginX + Math.random() * safeW;
+    const newTop = marginY + Math.random() * safeH;
     
     noBtn.style.position = 'absolute';
     noBtn.style.left = `${newLeft}px`;
     noBtn.style.top = `${newTop}px`;
     noBtn.style.zIndex = '1000'; // Make sure it sits on top of everything
     
-    // Grow Yes Button
+    // Grow Yes Button (limit growth on mobile to prevent overflow)
+    const maxScale = isMobile ? 2.5 : 4;
     yesScale += 0.3;
-    // Removed size cap: if (yesScale > 3) yesScale = 3; 
+    if (yesScale > maxScale) yesScale = maxScale;
     yesBtn.style.transform = `scale(${yesScale})`;
     
     // Ensure No button stays visible (z-index is already 100 in css)
